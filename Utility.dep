@@ -384,6 +384,10 @@
                     <name>ICC430</name>
                     <file> 65 59 8 42 62 69 9 72 51 2 48 7 30 23 70</file>
                 </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 51 59 62 8 42 72 69 9 2 23 65 70 30 48 7</file>
+                </tool>
             </inputs>
         </file>
         <forcedrebuild>

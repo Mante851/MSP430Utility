@@ -189,7 +189,10 @@ __interrupt void __serial_interrupt(void)
     if((UCA1IFG & UCTXIFG) && (UCA1IE & UCTXIE))
     {	
     	if(cbIsEmpty(&Serial._tx)) 
+        {
+            UCA1IE &=~ UCTXIE;
             return;
+        }
 
         // Data to send
     	cbRead(&Serial._tx, &data);

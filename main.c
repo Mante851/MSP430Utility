@@ -6,17 +6,19 @@ int main(void)
 {   
     WDTCTL = WDTPW + WDTHOLD;
     
-    P1DIR |= BIT0;
-    
     __enable_interrupt();
     Serial.begin(BAUD_9600);
     
-    byte data;
+    byte data[4];
     while (true)
     {
-        P1OUT ^= BIT0;
-      
-        Serial.readChar(&data);
-        Serial.writeCharAsync(data);
+        Serial.readChar(data);
+        Serial.writeCharAsync(*data);
+    }
+    
+    while (true)
+    {
+        Serial.read(data, 4);
+        Serial.writeBuffAsync(data, 4);
     }
 }
