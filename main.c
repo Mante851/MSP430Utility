@@ -12,8 +12,8 @@ int main(void)
     byte data[4];
     while (true)
     {
-        Serial.readChar(data);
-        Serial.writeCharAsync(*data);
+        if(Serial.readCharAsync(data))
+            Serial.writeCharAsync(*data);
     }
     
     while (true)
