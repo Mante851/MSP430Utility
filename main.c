@@ -16,9 +16,13 @@ int main(void)
             Serial.writeCharAsync(*data);
     }
     
+    // Il metodo writeBuffAsync(...) non funziona,
+    // stessa cosa per writeAsync(...)
+    /* 
     while (true)
     {
         Serial.read(data, 4);
         Serial.writeBuffAsync(data, 4);
     }
+    /**/
 }
