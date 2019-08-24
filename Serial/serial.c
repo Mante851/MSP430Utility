@@ -99,7 +99,7 @@ inline void _read(byte *buffer, uint bytes)
 bool _writeCharAsync(const byte data)
 {
     bool ret;
-    SERIAL_LOCK
+    SERIAL_LOCK_TX
     (
         ret = 
             cbWrite(&Serial._tx, data);
@@ -129,7 +129,7 @@ inline void _write(const byte *data)
 uint _writeAsync(const byte *data)
 {
     int i;
-    SERIAL_LOCK
+    SERIAL_LOCK_TX
     (
         for(i = 0; data[i]; ++i)
             if(!cbWrite(&Serial._tx, data[i]))
@@ -149,7 +149,7 @@ inline void _writeBuff(const byte *data, uint length)
 uint _writeBuffAsync(const byte *data, uint length)
 {
     int i;
-    SERIAL_LOCK
+    SERIAL_LOCK_TX
     (
         for(i = 0; i < length; ++i)
             if(!cbWrite(&Serial._tx, data[i]))
@@ -182,15 +182,15 @@ __interrupt void __serial_interrupt(void)
     static byte data;
   
     // Reading
-    if(UCA1IFG & UCRXIFG)                    
+    if(SERIAL_DATA_RECEIVED())                    
         cbWrite(&Serial._rx, UCA1RXBUF);
 
     // Writing
-    if((UCA1IFG & UCTXIFG) && (UCA1IE & UCTXIE))
+    if(SERIAL_IS_AVAILABLE() && SERIAL_TX_ENABLED())
     {	
     	if(cbIsEmpty(&Serial._tx)) 
         {
-            UCA1IE &=~ UCTXIE;
+            SERIAL_DISABLE_TX();
             return;
         }
 

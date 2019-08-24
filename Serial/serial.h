@@ -23,16 +23,23 @@ typedef enum BaudRate
 } BaudRate;
 
 
+#define SERIAL_DATA_RECEIVED() (UCA1IFG & UCRXIFG)
+#define SERIAL_IS_AVAILABLE()  (UCA1IFG & UCTXIFG)
+#define SERIAL_TX_ENABLED()    (UCA1IE  &  UCTXIE)
+#define SERIAL_ENABLE_TX()     (UCA1IE |=  UCTXIE)
+#define SERIAL_DISABLE_TX()    (UCA1IE &= ~UCTXIE)
+
+
 /**
  * @brief 
  * Executes the give code while
  * the transmission is locked.
  */
-#define SERIAL_LOCK(expr)       \
-    {                           \
-        UCA1IE &= ~UCTXIE;      \
-        expr                    \
-        UCA1IE |= UCTXIE;       \
+#define SERIAL_LOCK_TX(expr)  \
+    {                         \
+        SERIAL_ENABLE_TX();   \
+        expr                  \
+        SERIAL_DISABLE_TX();  \
     }                
 
 
