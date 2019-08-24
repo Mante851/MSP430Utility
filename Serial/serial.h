@@ -24,7 +24,10 @@ typedef enum BaudRate
 
 
 #define SERIAL_DATA_RECEIVED() (UCA1IFG & UCRXIFG)
-#define SERIAL_IS_AVAILABLE()  (UCA1IFG & UCTXIFG)
+#define SERIAL_ENABLE_RX()     (UCA1IE |=  UCRXIE)
+#define SERIAL_DISABLE_RX()    (UCA1IE &= ~UCRXIE)
+
+#define SERIAL_TX_AVAILABLE()  (UCA1IFG & UCTXIFG)
 #define SERIAL_TX_ENABLED()    (UCA1IE  &  UCTXIE)
 #define SERIAL_ENABLE_TX()     (UCA1IE |=  UCTXIE)
 #define SERIAL_DISABLE_TX()    (UCA1IE &= ~UCTXIE)
@@ -37,9 +40,9 @@ typedef enum BaudRate
  */
 #define SERIAL_LOCK_TX(expr)  \
     {                         \
-        SERIAL_ENABLE_TX();   \
-        expr                  \
         SERIAL_DISABLE_TX();  \
+        expr                  \
+        SERIAL_ENABLE_TX();   \
     }                
 
 

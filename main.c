@@ -9,11 +9,13 @@ int main(void)
     __enable_interrupt();
     Serial.begin(BAUD_9600);
     
-    byte data[4];
+    byte data[16];
     while (true)
     {
-        if(Serial.readCharAsync(data))
-            Serial.writeCharAsync(*data);
+        uint len = 
+            Serial.readUntil(data, 16, '\n');
+
+        Serial.writeBuff(data, len);
     }
     
     // Il metodo writeBuffAsync(...) non funziona,

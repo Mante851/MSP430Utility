@@ -61,8 +61,7 @@ void _begin(BaudRate baudRate)
         UCA1MCTL |= (byte)baudRate;
     );
 
-    // Enable USCI_A0 RX interrupt
-    UCA1IE |= UCRXIE;
+    SERIAL_ENABLE_RX();
 
     cbInit(&Serial._tx, Serial.buffSize);
     cbInit(&Serial._rx, Serial.buffSize);
@@ -114,7 +113,7 @@ void _writeChar(const byte data)
         ;
 
     // Waiting for byte to be sent.
-    while(!(UCA1IFG & UCTXIFG))
+    while(!SERIAL_TX_AVAILABLE())
         ;
 }
 
@@ -186,7 +185,7 @@ __interrupt void __serial_interrupt(void)
         cbWrite(&Serial._rx, UCA1RXBUF);
 
     // Writing
-    if(SERIAL_IS_AVAILABLE() && SERIAL_TX_ENABLED())
+    if(SERIAL_TX_AVAILABLE() && SERIAL_TX_ENABLED())
     {	
     	if(cbIsEmpty(&Serial._tx)) 
         {

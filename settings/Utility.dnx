@@ -12,7 +12,7 @@
         <ByteLimit>50</ByteLimit>
     </Stack>
     <DebugChecksum>
-        <Checksum>3404211783</Checksum>
+        <Checksum>595164</Checksum>
     </DebugChecksum>
     <CodeCoverage>
         <Enabled>_ 0</Enabled>
@@ -93,7 +93,8 @@
         <ShowTimeLog>1</ShowTimeLog>
     </DataSample>
     <Breakpoints>
-        <Count>0</Count>
+        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\main.c}.18.9" 1 0 0 0 "" 0 ""</Bp0>
+        <Count>1</Count>
     </Breakpoints>
     <FET>
         <Clock_mode>46</Clock_mode>
