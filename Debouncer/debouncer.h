@@ -5,40 +5,32 @@
 
 #include "utility.h"
 
-/**
- * Stores infos used by the readDebounce function.
- */
-typedef struct DebounceInfo
+
+typedef enum ButtonState {
+  PRESSED = 0x00,
+  JUST_PRESSED ,
+  JUST_RELEASED,
+  RELEASED = 0xFF,
+} ButtonState;
+
+
+typedef struct Button
 {
-    // The IN register's pointer for the 
-    // button.
-    volatile unsigned char* buttonInRegister;
-    
-    // The button's port.
-    unsigned char buttonPort;
-    
-    /*
-     * Raised when the button is pressed.
-     */
-    void (*buttonReleased)(void);
-    
-    /*
-     * Raised when the button is released.
-     */
-    void (*buttonPressed)(void);
-    
-    // Stores this port's readings.
-    unsigned char _readings;
-    
-    // The state of this switch.
-    State _state;
-} DebounceInfo;
+  Register* buttonIn;
+  Port buttonPort;
+  
+  Action buttonReleased;
+  Action buttonPressed;
+  
+  BitVector8b _readings;
+  ButtonState _state;
+} Button;
 
 
 /**
  * Initializes a DebounceSettings struct.
  *
- * @param buttonInRegister
+ * @param buttonIn
  *      The button's IN register (PxIN) address, 
  *      casted to a char pointer.        
  *
@@ -64,24 +56,24 @@ typedef struct DebounceInfo
  * @returns
  *      A pointer to the newly allocated struct.
  */
-DebounceInfo* createDebounceInfo(
-                       volatile unsigned char* buttonInRegister,
-                       unsigned char           buttonPort,
-                       void (*buttonReleased)(void),
-                       void (*buttonPressed) (void),
-                       State initialState
-                         );
+Button* createButton(
+  Register* buttonInRegister,
+  Port buttonPort,
+  Action buttonReleased,
+  Action buttonPressed,
+  ButtonState initialState
+);
 
 
 /**
  * Reads the state of a button, represented by a 
- * DebounceInfo structure, by applying a debounce 
+ * Button structure, by applying a debounce 
  * to it first.
  *
  * @returns 
  *      The state of the button, PRESSED (0x00), RELEASED (0xFF), 
  *      JUST_PRESSED (0x01) or JUST_RELEASED (0x02).
  */
-State readDebounce(DebounceInfo* debounceInfo);
+ButtonState readDebounce(Button* debounceInfo);
 
 #endif

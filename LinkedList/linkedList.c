@@ -1,6 +1,3 @@
-#ifndef LINKED_LIST_C
-#define LINKED_LIST_C
-
 #include <stdlib.h>
 #include "linkedList.h"
 #include "utility.h"
@@ -296,5 +293,3 @@ void llClear(Node** start, bool freeContent)
     
     *start = NULL;
 }
-
-#endif // !LINKED_LIST_C

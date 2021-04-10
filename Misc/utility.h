@@ -1,10 +1,8 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 
-
-#ifndef NULL
-#define NULL 0
-#endif // !NULL
+#include <stdlib.h>
+#include <stdbool.h>
 
 
 #ifndef HIGH
@@ -26,6 +24,13 @@ typedef unsigned char byte;
 typedef unsigned int  uint;
 typedef unsigned long ulong;
 
+typedef volatile unsigned char Register;
+typedef unsigned char Port;
+typedef unsigned char BitVector8b;
+
+typedef void (*Action)();
+
+
 
 /**
  * @brief Reads the state of a port from a register.
@@ -34,8 +39,8 @@ typedef unsigned long ulong;
  * @param reg:   The port's register
  * @param port:  The port's bit (BITx)
  */
-#define READ_PORT(reg, bit)    \
-    (((reg) & (bit)) ? HIGH : LOW)
+#define READ_PORT(reg, bit) \
+  (((*reg) & (bit)) ? HIGH : LOW)
 
       
 /**
@@ -44,9 +49,9 @@ typedef unsigned long ulong;
  * @param reg:   The port's register
  * @param port:  The port's bit (BITx)
  * @param value: The value to set, either HIGH or LOW
- */    
-#define SET_PORT(reg, bit, value)    \
-    ((value) ? (reg) |= (bit) : (reg) &= ~(bit))
+ */
+#define SET_PORT(reg, bit, value) \
+  ((value) ? (reg) |= (bit) : (reg) &= ~(bit))
 
 
 /** 
@@ -54,45 +59,34 @@ typedef unsigned long ulong;
  * 
  * @param reg:   The port's register
  * @param port:  The port's bit (BITx)
- */      
+ */
 #define SWITCH_PORT(reg, bit)    \
-    ((reg) ^= (bit))
+  ((reg) ^= (bit))
       
 /*
  * @brief Raises an event if the pointer to the
  * function is not NULL.
  */
 #define RAISE_EVENT(functionPointer)    \
-    { if ((functionPointer) != NULL)    \
-        (functionPointer)(); }
+  { if ((functionPointer) != NULL)    \
+    (functionPointer)(); }
 
 
-/**
- * @brief Represents a boolean value.
- */
-typedef enum bool {false, true} bool;
+inline void clamp(ulong *value, ulong min, ulong max) {
+  if (*value < min) 
+    *value = min;
+
+  else if (*value > max) 
+    *value = max;
+}
 
 
-/**
- * @brief Represents the states that
- * a switch can take.
- */
-typedef enum State
-{
-    PRESSED      = 0x00,
-    JUST_PRESSED ,
-    JUST_RELEASED,
-    RELEASED     = 0xFF
-} State;
+inline bool allLow(BitVector8b vector) {
+  return vector == 0;
+}
 
-
-inline void clamp(ulong *value, ulong min, ulong max)
-{
-    if (*value < min) 
-        *value = min;
-
-    else if (*value > max) 
-        *value = max;
+inline bool allHigh(BitVector8b vector) {
+  return vector == ~0;
 }
 
 
